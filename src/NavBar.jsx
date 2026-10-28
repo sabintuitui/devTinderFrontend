@@ -1,17 +1,47 @@
+import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { BASE_URL } from "./utils/constants";
+import { removeUser } from "./utils/userSlice";
 
 const NavBar = () => {
+  const userData = useSelector((store) => store.user);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      const res = await axios.post(
+        BASE_URL + "/logout",
+        {},
+        {
+          withCredentials: true,
+        },
+      );
+      dispatch(removeUser());
+      return navigate("/login");
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   return (
     <div className="navbar bg-base-200 shadow-sm">
-        <div className="flex-1">
-          <a className="btn btn-ghost text-xl">.devTinder</a>
-        </div>
-        <div className="flex gap-2">
-          <input
-            type="text"
-            placeholder="Search"
-            className="input w-24 md:w-auto"
-          />
+      <div className="flex-1">
+        <Link to="/" className="btn btn-ghost text-xl">
+          .devTinder
+        </Link>
+      </div>
+      <div className="flex gap-2">
+        <input
+          type="text"
+          placeholder="Search"
+          className="input w-24 md:w-auto"
+        />
+
+        {userData && (
           <div className="dropdown dropdown-end mx-4">
+            <p>Welcome {userData.firstName}</p>
             <div
               tabIndex={0}
               role="button"
@@ -29,22 +59,23 @@ const NavBar = () => {
               className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
             >
               <li>
-                <a className="justify-between">
+                <Link to="/profile" className="justify-between">
                   Profile
                   <span className="badge">New</span>
-                </a>
+                </Link>
               </li>
               <li>
                 <a>Settings</a>
               </li>
               <li>
-                <a>Logout</a>
+                <Link onClick={handleLogout}>Logout</Link>
               </li>
             </ul>
           </div>
-        </div>
+        )}
       </div>
-  )
-}
+    </div>
+  );
+};
 
-export default NavBar
+export default NavBar;
