@@ -1,8 +1,18 @@
-import React from "react";
+import axios from "axios";
+import { BASE_URL } from "../utils/constants";
 
 const FeedCard = ({ user }) => {
-  console.log(user);
   const { firstName, lastName, age, gender, about } = user;
+
+  const handleRequest = async () => {
+    try {
+      const res = await axios.post(
+        BASE_URL + "/request/send/:status/:toUserId",
+        { withCredentials: true },
+      );
+      
+    } catch (error) {}
+  };
 
   return (
     <div className="flex justify-center my-4 mb-4">
