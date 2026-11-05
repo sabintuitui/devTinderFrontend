@@ -15,7 +15,7 @@ const Feed = () => {
       const res = await axios.get(BASE_URL + "/feed", {
         withCredentials: true,
       });
-      dispatch(addFeed(res.data));
+      dispatch(addFeed(res?.data?.data));
     } catch (error) {
       console.error(error);
     }
@@ -24,6 +24,10 @@ const Feed = () => {
   useEffect(() => {
     getFeed();
   }, []);
+
+  if (!feed) return;
+  if (feed.length <= 0)
+    return <h1 className="text-center text-3xl my-4">No More new Users !!</h1>;
   return (
     feed && (
       <div>
